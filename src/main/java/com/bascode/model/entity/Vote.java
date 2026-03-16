@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(
-    name = "votes",
+    name = "vote",
     uniqueConstraints = @UniqueConstraint(columnNames = "voter_id")
 )
 public class Vote {
@@ -43,6 +43,12 @@ public class Vote {
 	public void setContester(Contester contester) {
 		this.contester = contester;
 	}
+
+	private String voterEmail;
+
+	private String contestantName;
+
+	private String position;
+
+	}
     
-    
-}
