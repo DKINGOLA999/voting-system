@@ -423,7 +423,7 @@
                 
                 <div>
                     <h2 style="color:white; margin-bottom:20px; display:flex; align-items:center; gap:10px;">
-                        <i class="fa fa-square-poll-vertical" style="color:var(--accent-blue);"></i> IVIS PLATFORM
+                        <i class="fa fa-square-poll-vertical" style="color:var(--accent-blue);"></i> Online Voting
                     </h2>
                     <p style="color:#94a3b8; font-size:15px; line-height:1.8;">
                         Integrated Voting Integrity System (IVIS) is the benchmark for secure, 
@@ -469,7 +469,7 @@
             </div>
             
             <div style="text-align:center; margin-top:80px; padding-top:30px; border-top:1px solid rgba(255,255,255,0.05); color:#64748b; font-size:13px;">
-                © 2026 IVIS Online Voting Framework. All database interactions are recorded and hash-verified.
+                © 2026 Online Voting System. All database interactions are recorded and hash-verified.
             </div>
         </div>
 

@@ -1,5 +1,7 @@
 package com.bascode.model.entity;
 
+import java.util.List;
+
 import com.bascode.model.enums.ContesterStatus;
 import com.bascode.model.enums.Position;
 
@@ -21,6 +23,12 @@ public class Contester {
 
     @Enumerated(EnumType.STRING)
     private ContesterStatus status;
+    
+    @OneToMany(mappedBy = "contester", fetch = FetchType.LAZY)
+    private List<Vote> votes;
+
+    // Add Getter
+    public List<Vote> getVotes() { return votes; }
 
     private String reason;
 
