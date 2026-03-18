@@ -6,7 +6,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 
 import com.bascode.model.entity.Voter;
+import com.bascode.model.enums.Position;
 import com.bascode.util.JPAInitializer;
+import com.bascode.util.JPAUtil;
 
 public class VoterDAO {
 
@@ -23,6 +25,24 @@ public class VoterDAO {
         em.close();
 
         return voters;
+        
+        
+    }
+    
+    public Long countByPosition(Position position) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            // Using a JOIN to ensure JPQL finds the position correctly
+            String jpql = "SELECT COUNT(v) FROM Vote v JOIN v.contester c WHERE c.position = :pos";
+            return em.createQuery(jpql, Long.class)
+                     .setParameter("pos", position)
+                     .getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0L;
+        } finally {
+            em.close();
+        }
     }
     public List<Voter> searchByEmail(String email){
 

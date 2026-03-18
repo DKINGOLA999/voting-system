@@ -1,68 +1,36 @@
 package com.bascode.dao;
 
 import com.bascode.model.entity.Setting;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-
-import java.time.LocalDate;
+import jakarta.persistence.*;
 
 public class SettingsDAO {
+    // Make sure "VotingPU" matches your persistence.xml
+    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("VotingPU");
 
-    private static EntityManagerFactory emf =
-            Persistence.createEntityManagerFactory("votingPU");
-
-
-    public void saveSettings(String electionName, String start, String end){
-
+    public Setting getSettings() {
         EntityManager em = emf.createEntityManager();
-
-        em.getTransaction().begin();
-
-        Setting setting;
-
-        try{
-
-            setting = em.createQuery(
-                "SELECT s FROM Setting s",
-                Setting.class
-            ).setMaxResults(1).getSingleResult();
-
-        }catch(Exception e){
-
-            setting = new Setting();
+        try {
+            // We usually only have one row of settings (ID 1)
+            Setting s = em.find(Setting.class, 1);
+            return s;
+        } finally {
+            em.close();
         }
+    }
 
-        setting.setElectionName(electionName);
-        setting.setStartDate(LocalDate.parse(start));
-        setting.setEndDate(LocalDate.parse(end));
-
-        if(setting.getId()==null){
-            em.persist(setting);
-        }else{
+    public void updateSettings(Setting setting) {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction et = em.getTransaction();
+        try {
+            et.begin();
+            setting.setId(1); // Force it to always update the first row
             em.merge(setting);
-        }
-
-        em.getTransaction().commit();
-
-        em.close();
-    }
-
-
-    public Setting getSettings(){
-
-        EntityManager em = emf.createEntityManager();
-
-        try{
-
-            return em.createQuery(
-                "SELECT s FROM Setting s",
-                Setting.class
-            ).setMaxResults(1).getSingleResult();
-
-        }catch(Exception e){
-            return null;
+            et.commit();
+        } catch (Exception e) {
+            if (et.isActive()) et.rollback();
+            e.printStackTrace();
+        } finally {
+            em.close();
         }
     }
-
 }

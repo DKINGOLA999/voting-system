@@ -24,6 +24,8 @@ public class Contester {
 
     private String reason;
 
+	private String lastName;
+
     public String getReason(){
     return reason;
     }
@@ -63,5 +65,20 @@ public class Contester {
 	public void setStatus(ContesterStatus status) {
 		this.status = status;
 	}
-    
+	public String getFirstName() {
+		return getFirstName();
+	}
+	public void setFirstName(String FirstName) {
+	}
+	public String getLastName() {
+		return getLastName();
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public boolean isApproved() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

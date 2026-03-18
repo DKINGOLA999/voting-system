@@ -48,4 +48,9 @@ public void setRole(String role) {
 this.role = role;
 }
 
+public String getStatus() {
+	// TODO Auto-generated method stub
+	return getStatus();
+}
+
 }

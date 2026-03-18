@@ -68,6 +68,11 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 </a>
 </li>
 
+<li>
+<a href="<%=request.getContextPath()%>/admin?action=result">
+<i class="fa fa-chart-pie"></i> Results
+</a>
+</li>
 
 <li>
 <a href="<%=request.getContextPath()%>/admin?action=settings">
