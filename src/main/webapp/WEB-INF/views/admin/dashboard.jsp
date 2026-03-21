@@ -182,17 +182,23 @@
 <div class="wrapper">
 
     <div class="sidebar">
-        <div class="sidebar-header" style="padding: 30px; border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <div class="avatar" style="width: 55px; height: 55px; font-size: 22px; background: var(--accent-blue);">
-                <%=avatarLetter%>
-            </div>
-            <div>
-                <h3 style="margin:0; font-size:18px; color:white;"><%=adminName%></h3>
-                <span class="online" style="display:flex; align-items:center; gap:5px;">
-                    <div class="pulse-indicator"></div> Live Node
-                </span>
-            </div>
-        </div>
+<%
+    // Pull the user object we set in the Admincontroller
+    com.bascode.model.entity.User loggedUser = (com.bascode.model.entity.User) session.getAttribute("loggedUser");
+    String fullName = (loggedUser != null) ? loggedUser.getFirstName() + " " + loggedUser.getLastName() : "Super Admin";
+    String initial = (loggedUser != null) ? loggedUser.getFirstName().substring(0,1).toUpperCase() : "A";
+%>
+
+<div class="sidebar-header" style="padding: 20px; display: flex; align-items: center; gap: 15px;">
+    <div class="avatar" style="background: #2563eb; width: 40px; height: 40px; border-radius: 50%; display: flex; 
+         align-items: center; justify-content: center; font-weight: bold; color: white;">
+        <%= initial %>
+    </div>
+    <div>
+        <h3 style="margin: 0; font-size: 14px; color: white;"><%= fullName %></h3>
+        <span class="online" style="font-size: 11px; color: #10b981;">● Online</span>
+    </div>
+</div>
 
         <ul class="menu" style="padding: 20px;">
             <li><a href="<%=request.getContextPath()%>/admin?action=dashboard" class="active"><i class="fa fa-chart-line"></i> Dashboard Hub</a></li>
