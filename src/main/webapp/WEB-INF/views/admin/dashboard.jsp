@@ -201,13 +201,13 @@
 </div>
 
         <ul class="menu" style="padding: 20px;">
-            <li><a href="<%=request.getContextPath()%>/admin?action=dashboard" class="active"><i class="fa fa-chart-line"></i> Dashboard Hub</a></li>
-            <li><a href="<%=request.getContextPath()%>/admin?action=voters"><i class="fa fa-users"></i> Voter Registry</a></li>
-            <li><a href="<%=request.getContextPath()%>/admin?action=contester"><i class="fa fa-user-tie"></i> Candidate Management</a></li>
-            <li><a href="<%=request.getContextPath()%>/admin?action=vote"><i class="fa fa-check-double"></i> Verified Ballots</a></li>
-            <li><a href="<%=request.getContextPath()%>/admin?action=user"><i class="fa fa-user-shield"></i> User Permissions</a></li>
-            <li><a href="<%=request.getContextPath()%>/admin?action=result"><i class="fa fa-poll"></i> Election Results</a></li>
-            <li><a href="<%=request.getContextPath()%>/admin?action=settings"><i class="fa fa-gears"></i> Platform Settings</a></li>
+            <li><a href="<%=request.getContextPath()%>/admin?action=dashboard" class="active"><i class="fa fa-chart-line"></i> Dashboard</a></li>
+            <li><a href="<%=request.getContextPath()%>/admin?action=voters"><i class="fa fa-users"></i> Voters</a></li>
+            <li><a href="<%=request.getContextPath()%>/admin?action=contester"><i class="fa fa-user-tie"></i> Contesters</a></li>
+            <li><a href="<%=request.getContextPath()%>/admin?action=vote"><i class="fa fa-check"></i> Votes</a></li>
+            <li><a href="<%=request.getContextPath()%>/admin?action=user"><i class="fa fa-user"></i> Users</a></li>
+            <li><a href="<%=request.getContextPath()%>/admin?action=result"><i class="fa fa-chart-pie"></i> Results</a></li>
+            <li><a href="<%=request.getContextPath()%>/admin?action=settings"><i class="fa fa-cog"></i> Settings</a></li>
             
             <div style="margin-top: 60px; padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px;">
                 <p style="color: #64748b; font-size: 11px; margin: 0 0 10px 0;">ELECTION STATUS</p>
@@ -232,9 +232,10 @@
 
         <div class="topnav" style="position:sticky; top:0; z-index:99; background:white; border-bottom:1px solid #e2e8f0;">
             <div class="nav-links">
-                <a href="<%=request.getContextPath()%>/"><i class="fa fa-globe"></i> Public Portal</a>
-                <a href="#"><i class="fa fa-shield"></i> Security Audit</a>
-                <a href="#"><i class="fa fa-database"></i> Backup Nodes</a>
+            
+                <a href="<%=request.getContextPath()%>/"><i class="fa fa-home"></i> Home</a>
+                <a href="#"><i class="fa fa-shield"></i> About</a>
+                <a href="#"><i class="fa fa-database"></i> Contacts</a>
                 <div id="session-timer" style="margin-left:20px; font-size:12px; color:#64748b;">
                     Session expires in: <span id="timer-val" style="color:var(--danger-red); font-weight:bold;">29:59</span>
                 </div>
