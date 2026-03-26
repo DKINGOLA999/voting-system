@@ -13,6 +13,72 @@
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
 
+	<context-param>
+		<param-name>mail.smtp.host</param-name>
+		<param-value>smtp.gmail.com</param-value>
+
+	</context-param>
+
+	<context-param>
+		<param-name>mail.smtp.port</param-name>
+		<param-value>465</param-value>
+
+	</context-param>
+
+	<context-param>
+		<param-name>mail.smtp.username</param-name>
+		<param-value>davidolawore6@gmail.com</param-value>
+
+	</context-param>
+
+	<context-param>
+		<param-name>mail.smtp.password</param-name>
+		<param-value>jdzqageiwtifjsbc</param-value>
+
+	</context-param>
+
+	<context-param>
+		<param-name>mail.smtp.from</param-name>
+		<param-value>davidolawore6@gmail.com</param-value>
+
+	</context-param>
+
+	<context-param>
+		<param-name>mail.smtp.auth</param-name>
+		<param-value>true</param-value>
+
+	</context-param>
+
+	<context-param>
+		<param-name>mail.smtp.starttls.enable</param-name>
+		<param-value>true</param-value>
+
+	</context-param>
+
+	<context-param>
+		<param-name>mail.smtp.ssl.enable</param-name>
+		<param-value>false</param-value>
+
+	</context-param>
+
+	<context-param>
+		<param-name>mail.smtp.password</param-name>
+		<param-value>jdzqageiwtifjsbc</param-value>
+
+	</context-param>
+
+	<context-param>
+		<param-name>election.phase</param-name>
+		<param-value>OPEN</param-value>
+
+	</context-param>
+
+	<context-param>
+		<param-name>app.base-url</param-name>
+		<param-value>http://localhost:8080/online-voting-system</param-value>
+
+	</context-param>
+
 
 	<!-- GLOBAL ERROR HANDLING -->
 

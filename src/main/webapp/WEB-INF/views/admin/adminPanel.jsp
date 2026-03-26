@@ -21,18 +21,65 @@ Election currentElection = (Election) request.getAttribute("currentElection");
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">Votify Admin</a>
-            <div class="collapse navbar-collapse">
+            <a class="navbar-brand" href="<%= request.getContextPath() %>/">Votify Admin</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav" aria-controls="adminNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="adminNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/dashboard">User Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/results">Results</a></li>
+                </ul>
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/dashboard">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/logout">Logout</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <div class="container py-4">
-        <h2>Admin Panel</h2>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="text-white mb-1">Admin Panel</h2>
+                <p class="text-muted fw-light">Hello, <%= admin.getFirstName() != null && !admin.getFirstName().isEmpty() ? admin.getFirstName() + " " + admin.getLastName() : admin.getEmail() %></p>
+            </div>
+            <span class="badge bg-info fs-6">Admin</span>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="card shadow-sm border-primary">
+                    <div class="card-body">
+                        <h6 class="card-title">Total Users</h6>
+                        <p class="card-text fs-4"> <%= users != null ? users.size() : 0 %> </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow-sm border-warning">
+                    <div class="card-body">
+                        <h6 class="card-title">Pending Contesters</h6>
+                        <p class="card-text fs-4"> <%= pendingContesters != null ? pendingContesters.size() : 0 %> </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow-sm border-success">
+                    <div class="card-body">
+                        <h6 class="card-title">Election Status</h6>
+                        <p class="card-text fs-6"> <%= currentElection != null && currentElection.isActive() ? "Active" : "Inactive" %></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow-sm border-secondary">
+                    <div class="card-body">
+                        <h6 class="card-title">Contestant Slots</h6>
+                        <p class="card-text fs-6">3 per position</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <% if (request.getAttribute("error") != null) { %>
             <div class="alert alert-danger"><%= request.getAttribute("error") %></div>
@@ -92,6 +139,26 @@ Election currentElection = (Election) request.getAttribute("currentElection");
                                 <td><%= u.getFirstName() %> <%= u.getLastName() %></td>
                                 <td><%= u.getEmail() %></td>
                                 <td><%= u.getRole() %></td>
+                                <td><%= u.isSuspended() ? "Suspended" : "Active" %></td>
+                                <td>
+                                    <form method="post" action="panel" style="display:inline">
+                                        <input type="hidden" name="action" value="deleteUser"/>
+                                        <input type="hidden" name="userId" value="<%= u.getId() %>"/>
+                                        <button class="btn btn-danger btn-sm" type="submit" onclick="return confirm('Delete user?')">Delete</button>
+                                    </form>
+                                    <form method="post" action="panel" style="display:inline">
+                                        <input type="hidden" name="action" value="toggleSuspend"/>
+                                        <input type="hidden" name="userId" value="<%= u.getId() %>"/>
+                                        <button class="btn btn-warning btn-sm" type="submit"><%= u.isSuspended() ? "Unsuspend" : "Suspend" %></button>
+                                    </form>
+                                    <% if (!u.getRole().equals(com.bascode.model.enums.Role.ADMIN)) { %>
+                                    <form method="post" action="panel" style="display:inline">
+                                        <input type="hidden" name="action" value="promoteAdmin"/>
+                                        <input type="hidden" name="userId" value="<%= u.getId() %>"/>
+                                        <button class="btn btn-secondary btn-sm" type="submit">Make Admin</button>
+                                    </form>
+                                    <% } %>
+                                </td>
                             </tr>
                         <% } } %>
                         </tbody>

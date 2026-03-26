@@ -28,13 +28,25 @@ public class ResultsServlet extends HttpServlet {
 
         try (EntityManager em = JPAUtil.getEntityManager()) {
             UserService service = new UserServiceImpl(em);
-            Map<Position, List<Contester>> results = service.getElectionResults();
-            Map<Long, Long> voteCounts = new java.util.HashMap<>();
-            for (List<Contester> contesters : results.values()) {
-                for (Contester c : contesters) {
-                    voteCounts.put(c.getId(), service.countVotesForContester(c));
+            List<Contester> approvedContesters = service.getApprovedContesters();
+            
+            // Group by position and sort by votes descending
+            Map<Position, List<Contester>> results = new java.util.HashMap<>();
+            for (Position pos : Position.values()) {
+                List<Contester> posContesters = approvedContesters.stream()
+                    .filter(c -> c.getPosition() == pos)
+                    .sorted((c1, c2) -> Long.compare(service.countVotesForContester(c2), service.countVotesForContester(c1)))
+                    .collect(java.util.stream.Collectors.toList());
+                if (!posContesters.isEmpty()) {
+                    results.put(pos, posContesters);
                 }
             }
+            
+            Map<Long, Long> voteCounts = new java.util.HashMap<>();
+            for (Contester c : approvedContesters) {
+                voteCounts.put(c.getId(), service.countVotesForContester(c));
+            }
+            
             request.setAttribute("results", results);
             request.setAttribute("voteCounts", voteCounts);
             request.getRequestDispatcher("/WEB-INF/views/results.jsp").forward(request, response);

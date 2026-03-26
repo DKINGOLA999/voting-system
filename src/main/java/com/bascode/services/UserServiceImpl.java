@@ -58,6 +58,9 @@ public class UserServiceImpl implements UserService {
             em.persist(user);
             em.getTransaction().commit();
 
+            // Send verification email with OTP
+            EmailService.sendVerificationEmail(user.getEmail(), code);
+
             return true;
 
         } catch (Exception e) {
@@ -429,13 +432,71 @@ public class UserServiceImpl implements UserService {
         return query.getResultList();
     }
 
+    @Override
+    public boolean deleteUser(Long userId) {
+        try {
+            em.getTransaction().begin();
+            User user = em.find(User.class, userId);
+            if (user == null) {
+                em.getTransaction().rollback();
+                return false;
+            }
+            em.remove(user);
+            em.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean suspendUser(Long userId) {
+        try {
+            em.getTransaction().begin();
+            User user = em.find(User.class, userId);
+            if (user == null) {
+                em.getTransaction().rollback();
+                return false;
+            }
+            user.setSuspended(!user.isSuspended());
+            em.merge(user);
+            em.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean promoteToAdmin(Long userId) {
+        try {
+            em.getTransaction().begin();
+            User user = em.find(User.class, userId);
+            if (user == null) {
+                em.getTransaction().rollback();
+                return false;
+            }
+            user.setRole(Role.ADMIN);
+            em.merge(user);
+            em.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     // ELECTION MANAGEMENT
     @Override
     public Election getCurrentElection() {
-        TypedQuery<Election> query = em.createQuery(
-                "SELECT e FROM Election e WHERE e.active = true", Election.class);
-        List<Election> results = query.getResultList();
-        return results.isEmpty() ? null : results.get(0);
+        TypedQuery<Election> query = em.createQuery("SELECT e FROM Election e WHERE e.active = true", Election.class);
+        java.util.List<Election> elections = query.getResultList();
+        return elections.isEmpty() ? null : elections.get(0);
     }
 
     @Override
@@ -446,11 +507,14 @@ public class UserServiceImpl implements UserService {
             if (election == null) {
                 election = new Election();
                 election.setActive(true);
-                em.persist(election);
             }
             election.setStartDate(start);
             election.setEndDate(end);
-            em.merge(election);
+            if (election.getId() == null) {
+                em.persist(election);
+            } else {
+                em.merge(election);
+            }
             em.getTransaction().commit();
             return true;
         } catch (Exception e) {
@@ -465,12 +529,14 @@ public class UserServiceImpl implements UserService {
         try {
             em.getTransaction().begin();
             Election election = getCurrentElection();
-            if (election != null) {
-                election.setStartDate(java.time.LocalDateTime.now());
+            if (election != null && election.getStartDate() != null) {
+                election.setActive(true);
                 em.merge(election);
+                em.getTransaction().commit();
+                return true;
             }
-            em.getTransaction().commit();
-            return true;
+            em.getTransaction().rollback();
+            return false;
         } catch (Exception e) {
             if (em.getTransaction().isActive()) em.getTransaction().rollback();
             e.printStackTrace();
@@ -484,11 +550,13 @@ public class UserServiceImpl implements UserService {
             em.getTransaction().begin();
             Election election = getCurrentElection();
             if (election != null) {
-                election.setEndDate(java.time.LocalDateTime.now());
+                election.setActive(false);
                 em.merge(election);
+                em.getTransaction().commit();
+                return true;
             }
-            em.getTransaction().commit();
-            return true;
+            em.getTransaction().rollback();
+            return false;
         } catch (Exception e) {
             if (em.getTransaction().isActive()) em.getTransaction().rollback();
             e.printStackTrace();
@@ -501,11 +569,14 @@ public class UserServiceImpl implements UserService {
         java.util.Map<Position, java.util.List<Contester>> results = new java.util.HashMap<>();
         for (Position pos : Position.values()) {
             TypedQuery<Contester> query = em.createQuery(
-                    "SELECT c FROM Contester c WHERE c.position = :position AND c.status = :status ORDER BY (SELECT COUNT(v) FROM Vote v WHERE v.contester = c) DESC", Contester.class);
+                "SELECT c FROM Contester c WHERE c.position = :position AND c.status = :status ORDER BY (SELECT COUNT(v) FROM Vote v WHERE v.contester = c) DESC",
+                Contester.class
+            );
             query.setParameter("position", pos);
             query.setParameter("status", ContesterStatus.APPROVED);
             results.put(pos, query.getResultList());
         }
         return results;
     }
-}
+
+}    

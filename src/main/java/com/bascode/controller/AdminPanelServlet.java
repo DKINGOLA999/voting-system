@@ -12,6 +12,7 @@ import com.bascode.services.UserServiceImpl;
 import com.bascode.util.JPAUtil;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -73,13 +74,23 @@ public class AdminPanelServlet extends HttpServlet {
                     Long contesterId = Long.parseLong(request.getParameter("contesterId"));
                     Contester contester = em.find(Contester.class, contesterId);
                     if (contester != null && contester.getStatus() == ContesterStatus.PENDING) {
-                        em.getTransaction().begin();
-                        contester.setStatus(ContesterStatus.APPROVED);
-                        contester.getUser().setRole(com.bascode.model.enums.Role.CONTESTER);
-                        em.merge(contester.getUser());
-                        em.merge(contester);
-                        em.getTransaction().commit();
-                        request.setAttribute("success", "Contester approved.");
+                        // Check if already 3 approved for this position
+                        TypedQuery<Long> countQuery = em.createQuery(
+                            "SELECT COUNT(c) FROM Contester c WHERE c.position = :position AND c.status = :status", Long.class);
+                        countQuery.setParameter("position", contester.getPosition());
+                        countQuery.setParameter("status", ContesterStatus.APPROVED);
+                        Long approvedCount = countQuery.getSingleResult();
+                        if (approvedCount >= 3) {
+                            request.setAttribute("error", "Maximum 3 contesters allowed per position.");
+                        } else {
+                            em.getTransaction().begin();
+                            contester.setStatus(ContesterStatus.APPROVED);
+                            contester.getUser().setRole(com.bascode.model.enums.Role.CONTESTER);
+                            em.merge(contester.getUser());
+                            em.merge(contester);
+                            em.getTransaction().commit();
+                            request.setAttribute("success", "Contester approved.");
+                        }
                     }
                 } catch (NumberFormatException e) {
                     request.setAttribute("error", "Invalid contester ID.");
@@ -97,6 +108,39 @@ public class AdminPanelServlet extends HttpServlet {
                     }
                 } catch (NumberFormatException e) {
                     request.setAttribute("error", "Invalid contester ID.");
+                }
+            } else if ("deleteUser".equals(action)) {
+                try {
+                    Long userId = Long.parseLong(request.getParameter("userId"));
+                    if (service.deleteUser(userId)) {
+                        request.setAttribute("success", "User deleted successfully.");
+                    } else {
+                        request.setAttribute("error", "Failed to delete user.");
+                    }
+                } catch (NumberFormatException e) {
+                    request.setAttribute("error", "Invalid user ID.");
+                }
+            } else if ("toggleSuspend".equals(action)) {
+                try {
+                    Long userId = Long.parseLong(request.getParameter("userId"));
+                    if (service.suspendUser(userId)) {
+                        request.setAttribute("success", "User status updated successfully.");
+                    } else {
+                        request.setAttribute("error", "Failed to update user status.");
+                    }
+                } catch (NumberFormatException e) {
+                    request.setAttribute("error", "Invalid user ID.");
+                }
+            } else if ("promoteAdmin".equals(action)) {
+                try {
+                    Long userId = Long.parseLong(request.getParameter("userId"));
+                    if (service.promoteToAdmin(userId)) {
+                        request.setAttribute("success", "User promoted to admin.");
+                    } else {
+                        request.setAttribute("error", "Failed to promote user.");
+                    }
+                } catch (NumberFormatException e) {
+                    request.setAttribute("error", "Invalid user ID.");
                 }
             } else if ("setElectionDates".equals(action)) {
                 try {
