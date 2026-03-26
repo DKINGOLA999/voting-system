@@ -65,7 +65,10 @@ public class EmailService {
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com"); // Trust Gmail explicitly
 
+        
         Session session = Session.getInstance(props, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -83,7 +86,7 @@ public class EmailService {
             message.setContent(htmlContent, "text/html; charset=utf-8");
 
             Transport.send(message);
-            System.out.println("Styled Email sent successfully to " + toEmail);
+            System.out.println("OTP Code sent successfully to " + toEmail);
 
         } catch (MessagingException e) {
             e.printStackTrace();
