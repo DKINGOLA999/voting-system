@@ -91,7 +91,7 @@ body{
 
     <div class="text-center mt-3">
         <small>Don't have an account? <a href="register">Create Account</a></small><br>
-        <a href="forgotPassword">Forgot Password?</a>
+        <a href="forgotPassword.jsp">Forgot Password?</a>
     </div>
 
 </div>

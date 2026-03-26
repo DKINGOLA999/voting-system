@@ -25,6 +25,10 @@ public interface UserService {
     boolean changePassword(User user, String currentPassword, String newPassword);
 
     List<User> getAllUsers();
+    boolean deleteUser(Long userId);
+    boolean suspendUser(Long userId);
+    boolean promoteToAdmin(Long userId);
+
     // Election management
     com.bascode.model.entity.Election getCurrentElection();
     boolean setElectionDates(java.time.LocalDateTime start, java.time.LocalDateTime end);

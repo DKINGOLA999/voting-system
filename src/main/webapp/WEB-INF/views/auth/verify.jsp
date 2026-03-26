@@ -62,6 +62,13 @@ body{
 
 </form>
 
+<div class="mt-3">
+    <form action="<%= request.getContextPath() %>/resendOtp" method="post" style="display: inline;">
+        <input type="hidden" name="email" value="<%= request.getAttribute("email") != null ? request.getAttribute("email") : "" %>">
+        <button type="submit" class="btn btn-link p-0">Didn't receive OTP? Resend</button>
+    </form>
+</div>
+
 </div>
 </div>
 

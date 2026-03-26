@@ -12,10 +12,10 @@ import jakarta.mail.internet.MimeMessage;
 
 public class EmailService {
 
-    private static final String FROM_EMAIL = "ihannahekundayo@gmail.com";
-    private static final String APP_PASSWORD = "dirw duve ikvf gjex";
+    // IMPORTANT: Generate a NEW App Password and put it here
+    private static final String FROM_EMAIL = "davidolawore6@gmail.com";
+    private static final String APP_PASSWORD = "jdzq agei wtif jsbc"; // Replace with actual Gmail App Password 
 
-    // Helper method to wrap content in a nice HTML/CSS frame
     private static String getHtmlTemplate(String title, String message, String code) {
         return "<div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;'>" +
                 "  <div style='background-color: #007bff; color: white; padding: 20px; text-align: center;'>" +
@@ -36,37 +36,40 @@ public class EmailService {
     }
 
     public static void sendVerificationEmail(String toEmail, String code) {
-        String title = "Verify Your Account";
-        String message = "Welcome! Thank you for joining the Online Voting System. Please use the verification code below to activate your account:";
-        String htmlBody = getHtmlTemplate(title, message, code);
-        
-        sendEmail(toEmail, "Verify Your Account", htmlBody);
+        sendEmail(toEmail, "Verify Your Account", getHtmlTemplate("Verify Your Account", "Welcome! Please use the code below to activate your account:", code));
     }
 
     public static void sendPasswordResetEmail(String toEmail, String otp) {
-        String title = "Password Reset Request";
-        String message = "We received a request to reset your password. Use the following OTP to proceed with the reset:";
-        String htmlBody = getHtmlTemplate(title, message, otp);
-
-        sendEmail(toEmail, "Password Reset", htmlBody);
+        sendEmail(toEmail, "Password Reset", getHtmlTemplate("Password Reset Request", "Use the following OTP to proceed with the reset:", otp));
     }
 
     public static void sendResendOtpEmail(String toEmail, String otp) {
-        String title = "New Verification Code";
-        String message = "As requested, here is your new verification code for the Online Voting System:";
-        String htmlBody = getHtmlTemplate(title, message, otp);
-
-        sendEmail(toEmail, "New OTP Received", htmlBody);
+        sendEmail(toEmail, "New Verification Code", getHtmlTemplate("New Verification Code", "As requested, here is your new verification code:", otp));
     }
 
     public static void sendEmail(String toEmail, String subject, String htmlContent) {
         Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
+        
+        // Use Port 465 for SSL (More likely to bypass network blocks)
         props.put("mail.smtp.host", "smtp.gmail.com");
+<<<<<<< HEAD
         props.put("mail.smtp.port", "587");
         props.put("mail.smtp.ssl.protocols", "TLSv1.2");
         props.put("mail.smtp.ssl.trust", "smtp.gmail.com"); // Trust Gmail explicitly
+=======
+        props.put("mail.smtp.port", "465");
+        props.put("mail.smtp.auth", "true");
+        
+        // SSL specific settings
+        props.put("mail.smtp.ssl.enable", "true");
+        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+
+        // Timeouts to prevent the app from hanging
+        props.put("mail.smtp.connectiontimeout", "10000"); // 10 seconds
+        props.put("mail.smtp.timeout", "10000");           // 10 seconds
+>>>>>>> 83293cc7828a9cecf8a0daa1897ecdfa9366f96f
 
         
         Session session = Session.getInstance(props, new Authenticator() {
@@ -81,16 +84,18 @@ public class EmailService {
             message.setFrom(new InternetAddress(FROM_EMAIL));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
             message.setSubject(subject);
-
-            // CRITICAL CHANGE: Use setContent with "text/html" instead of setText
             message.setContent(htmlContent, "text/html; charset=utf-8");
 
             Transport.send(message);
+<<<<<<< HEAD
             System.out.println("OTP Code sent successfully to " + toEmail);
+=======
+            System.out.println("Email sent successfully via Port 465 to " + toEmail);
+>>>>>>> 83293cc7828a9cecf8a0daa1897ecdfa9366f96f
 
         } catch (MessagingException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error sending email: " + e.getMessage());
+            System.err.println("SMTP Error: " + e.getMessage());
+            throw new RuntimeException("Failed to send email. Check network or App Password.");
         }
     }
 }

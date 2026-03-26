@@ -6,6 +6,7 @@ if (user == null) {
     return;
 }
 
+List<Contester> contesters = (List<Contester>) request.getAttribute("contesters");
 Boolean hasVoted = Boolean.TRUE.equals(request.getAttribute("hasVoted"));
 Boolean isContester = Boolean.TRUE.equals(request.getAttribute("isContester"));
 Boolean eligible = Boolean.TRUE.equals(request.getAttribute("eligible"));
@@ -26,18 +27,18 @@ com.bascode.model.enums.ContesterStatus contesterStatus = (com.bascode.model.enu
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">Votify</a>
+            <a class="navbar-brand" href="<%= request.getContextPath() %>/">Votify</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/services.jsp">Services</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/contacts.jsp">Contacts</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/about.jsp">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/results">Results</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="/dashboard">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/services.jsp">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/contacts.jsp">Contacts</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/about.jsp">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/results">Results</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="<%= request.getContextPath() %>/dashboard">Dashboard</a></li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item dropdown">
@@ -45,7 +46,12 @@ com.bascode.model.enums.ContesterStatus contesterStatus = (com.bascode.model.enu
                             <%= user.getFirstName() != null && !user.getFirstName().isEmpty() ? user.getFirstName() + " " + user.getLastName() : user.getEmail() %>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                            <li><a class="dropdown-item" href="<%= request.getContextPath() %>/dashboard">Dashboard</a></li>
+                            <% if (user.getRole().equals(com.bascode.model.enums.Role.ADMIN)) { %>
+                            <li><a class="dropdown-item" href="<%= request.getContextPath() %>/admin/panel">Admin Panel</a></li>
+                            <% } %>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="<%= request.getContextPath() %>/logout">Logout</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -54,10 +60,24 @@ com.bascode.model.enums.ContesterStatus contesterStatus = (com.bascode.model.enu
     </nav>
 
     <div class="container">
-        <div class="row mb-3">
-            <div class="col-12">
-                <h2>Welcome, <%= user.getFirstName() != null && !user.getFirstName().isEmpty() ? user.getFirstName() + " " + user.getLastName() : user.getEmail() %></h2>
-                <p>Role: <strong><%= user.getRole() %></strong></p>
+        <div class="row g-3 mb-4">
+            <div class="col-md-8">
+                <div class="card bg-dark text-white shadow-sm">
+                    <div class="card-body">
+                        <h3 class="card-title">Welcome, <%= user.getFirstName() != null && !user.getFirstName().isEmpty() ? user.getFirstName() + " " + user.getLastName() : user.getEmail() %></h3>
+                        <p class="card-text">Role: <strong><%= user.getRole() %></strong></p>
+                        <p class="card-text">Use the navigation links to vote, submit manifesto, and view results.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-title">Quick Actions</h6>
+                        <a href="<%= request.getContextPath() %>/results" class="btn btn-primary btn-sm w-100 mb-2">View Results</a>
+                        <a href="<%= request.getContextPath() %>/admin/panel" class="btn btn-secondary btn-sm w-100" role="button">Admin Panel</a>
+                    </div>
+                </div>
             </div>
         </div>
 
