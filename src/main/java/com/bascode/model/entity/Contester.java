@@ -22,6 +22,9 @@ public class Contester {
     @Enumerated(EnumType.STRING)
     private ContesterStatus status;
 
+    @Column(length = 2500) // 500 words max (approx 5 chars per word)
+    private String manifesto;
+
     
 	public Long getId() {
 		return id;
@@ -53,6 +56,14 @@ public class Contester {
 
 	public void setStatus(ContesterStatus status) {
 		this.status = status;
+	}
+
+	public String getManifesto() {
+		return manifesto;
+	}
+
+	public void setManifesto(String manifesto) {
+		this.manifesto = manifesto;
 	}
     
     
