@@ -22,9 +22,23 @@ public class Contester {
     @Enumerated(EnumType.STRING)
     private ContesterStatus status;
 
+<<<<<<< HEAD
     @Column(length = 2500) // 500 words max (approx 5 chars per word)
     private String manifesto;
 
+=======
+    private String reason;
+
+	private String lastName;
+
+    public String getReason(){
+    return reason;
+    }
+
+    public void setReason(String reason){
+    this.reason = reason;
+    }
+>>>>>>> recovery-branch
     
 	public Long getId() {
 		return id;
@@ -57,6 +71,7 @@ public class Contester {
 	public void setStatus(ContesterStatus status) {
 		this.status = status;
 	}
+<<<<<<< HEAD
 
 	public String getManifesto() {
 		return manifesto;
@@ -67,4 +82,22 @@ public class Contester {
 	}
     
     
+=======
+	public String getFirstName() {
+		return getFirstName();
+	}
+	public void setFirstName(String FirstName) {
+	}
+	public String getLastName() {
+		return getLastName();
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public boolean isApproved() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+>>>>>>> recovery-branch
 }

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 //package com.bascode.util;
 //
 //import jakarta.persistence.EntityManagerFactory;
@@ -27,11 +28,16 @@
 
 
 
+=======
+>>>>>>> recovery-branch
 package com.bascode.util;
 
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+<<<<<<< HEAD
 import jakarta.servlet.ServletContext;
+=======
+>>>>>>> recovery-branch
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
@@ -39,6 +45,7 @@ import jakarta.servlet.annotation.WebListener;
 @WebListener
 public class JPAInitializer implements ServletContextListener {
 
+<<<<<<< HEAD
     private EntityManagerFactory emf;
 
     @Override
@@ -92,15 +99,47 @@ public class JPAInitializer implements ServletContextListener {
             }
         } catch (Exception e) {
             System.err.println("Failed to seed super admin: " + e.getMessage());
+=======
+    private static EntityManagerFactory emf;
+
+    @Override
+    public void contextInitialized(ServletContextEvent sce) {
+
+        try {
+
+            emf = Persistence.createEntityManagerFactory("VotingPU");
+
+            sce.getServletContext().setAttribute("emf", emf);
+
+            System.out.println("JPA Initialized Successfully");
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            System.out.println("JPA Initialization Failed");
+
+>>>>>>> recovery-branch
         }
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
+<<<<<<< HEAD
         if (emf != null && emf.isOpen()) {
             System.out.println("Closing JPA EntityManagerFactory...");
             emf.close();
             System.out.println("JPA Closed Successfully!");
         }
     }
+=======
+
+        if (emf != null && emf.isOpen()) {
+            emf.close();
+        }
+    }
+
+    public static EntityManagerFactory getEntityManagerFactory() {
+        return emf;
+    }
+>>>>>>> recovery-branch
 }

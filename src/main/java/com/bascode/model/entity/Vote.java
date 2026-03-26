@@ -4,7 +4,11 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(
+<<<<<<< HEAD
     name = "votes",
+=======
+    name = "vote",
+>>>>>>> recovery-branch
     uniqueConstraints = @UniqueConstraint(columnNames = "voter_id")
 )
 public class Vote {
@@ -43,6 +47,18 @@ public class Vote {
 	public void setContester(Contester contester) {
 		this.contester = contester;
 	}
+<<<<<<< HEAD
     
     
 }
+=======
+
+	private String voterEmail;
+
+	private String contestantName;
+
+	private String position;
+
+	}
+    
+>>>>>>> recovery-branch
