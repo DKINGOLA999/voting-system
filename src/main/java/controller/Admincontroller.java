@@ -22,11 +22,12 @@ public class Admincontroller extends HttpServlet {
             // Instead of redirecting to a missing login.jsp, we provide a temporary mock
             // This ensures you can still work even if your friends haven't finished the login
             User tempAdmin = new User();
-            tempAdmin.setFirstName("System");
-            tempAdmin.setLastName("Admin");
+            tempAdmin.setFirstName("Admin");
+            tempAdmin.setLastName("Pass");
             session.setAttribute("loggedUser", tempAdmin);
         }
-
+        
+        
         String action = request.getParameter("action");
         if (action == null) { action = "dashboard"; }
 
@@ -67,6 +68,53 @@ public class Admincontroller extends HttpServlet {
 
             // Success redirect
             response.sendRedirect(request.getContextPath() + "/admin?action=settings&msg=success");
+        } else {
+            doGet(request, response);
+        }
+    }
+    
+    protected void doPost1(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        
+        String action = request.getParameter("action");
+        HttpSession session = request.getSession();
+        User loggedUser = (User) session.getAttribute("loggedUser");
+
+        // 1. HANDLE ELECTION SETTINGS
+        if ("updateSettings".equals(action)) {
+            SettingsDAO settingsDAO = new SettingsDAO();
+            Setting setting = settingsDAO.getSettings();
+            if (setting == null) { setting = new Setting(); setting.setId(1); }
+
+            setting.setElectionName(request.getParameter("electionName"));
+            setting.setStartDate(request.getParameter("startDate"));
+            setting.setEndDate(request.getParameter("endDate"));
+
+            settingsDAO.updateSettings(setting);
+            response.sendRedirect("admin?action=settings&msg=election_success");
+
+        // 2. HANDLE PROFILE/PHONE UPDATE
+        } else if ("updateProfile".equals(action)) {
+            if (loggedUser != null) {
+                // We update the phone in the object (ensure User entity has setPhone)
+                // In a real app, you'd call userDAO.update(loggedUser);
+                session.setAttribute("phoneNum", request.getParameter("phone")); 
+                response.sendRedirect("admin?action=settings&msg=profile_success");
+            }
+
+        // 3. HANDLE PASSWORD CHANGE
+        } else if ("updatePassword".equals(action)) {
+            String current = request.getParameter("currentPassword");
+            String newPass = request.getParameter("newPassword");
+            String confirm = request.getParameter("confirmPassword");
+
+            // Mock check: in real logic, check current against loggedUser.getPassword()
+            if (newPass != null && newPass.equals(confirm)) {
+                response.sendRedirect("admin?action=settings&msg=pass_success");
+            } else {
+                response.sendRedirect("admin?action=settings&msg=pass_error");
+            }
+            
         } else {
             doGet(request, response);
         }

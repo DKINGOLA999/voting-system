@@ -6,15 +6,11 @@ import jakarta.persistence.*;
 @Table(name = "settings")
 public class Setting {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
+    private int id = 1; // Always 1 for system config
     @Column(name = "election_name")
     private String electionName;
-
     @Column(name = "start_date")
     private String startDate;
-
     @Column(name = "end_date")
     private String endDate;
 
